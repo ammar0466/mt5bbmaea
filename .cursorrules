@@ -39,7 +39,8 @@
       "DASHBOARD.md": "Markdown representation of EA dashboard",
       "TASKS.md": "Project tasks and roadmap",
       "LICENSE": "Project license information",
-      "mt5ea.mq5": "Legacy EA file (to be replaced)"
+      "mt5ea.mq5": "Legacy EA file (to be replaced)",
+      "CHANGELOG.md": "Record of changes and updates"
     },
     "dependencies": {
       "mql5": "MetaTrader 5 platform",
@@ -48,6 +49,25 @@
         "PositionInfo.mqh",
         "AccountInfo.mqh"
       ]
+    }
+  },
+  "task.tracking": {
+    "description": "System for tracking tasks and changes",
+    "task_file": "TASKS.md",
+    "changelog_file": "CHANGELOG.md",
+    "task_format": "- [ ] Task description",
+    "completed_format": "- [x] Task description",
+    "changelog_format": "## [YYYY-MM-DD] - Description\n\n- Added: Feature or change\n- Fixed: Bug fix\n- Changed: Modification to existing feature\n- Removed: Removed feature",
+    "commands": {
+      "mark_task_complete": "sed -i 's/- \\[ \\] Task description/- [x] Task description/' TASKS.md",
+      "add_task": "echo '- [ ] New task description' >> TASKS.md",
+      "add_changelog": "echo '## [$(date +%Y-%m-%d)] - Description\n\n- Added: Feature or change' >> CHANGELOG.md"
+    },
+    "workflow": {
+      "1": "When completing a task, mark it as done in TASKS.md",
+      "2": "Add the change to CHANGELOG.md with date and description",
+      "3": "Commit both files with appropriate commit message",
+      "4": "When discovering new tasks, add them to TASKS.md"
     }
   },
   "git.docs": {
