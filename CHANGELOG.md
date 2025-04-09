@@ -1,6 +1,34 @@
 # Changelog
 
-All notable changes to the BBMA EA project will be documented in this file.
+All notable changes to the BBMA Expert Advisor project will be documented in this file.
+
+## [2024-07-15] - Pre-commit hooks implementation
+
+### Added
+- Pre-commit hooks to ensure TASKS.md and CHANGELOG.md are updated before commits
+- Commit message template with standardized format
+- Task tracking system with completion status
+
+### Changed
+- Updated .cursorrules file with pre-commit hook configurations
+- Improved task tracking workflow
+
+## [2024-07-14] - Documentation updates
+
+### Added
+- BBMA_ENTRY_FLOW.md with diagram flow for entry validation
+- BBMA_REENTRY_MOMENTUM.md with detailed reentry after momentum guide
+- BBMA_CSAK_REENTRY.md with CSAK reentry reference
+- BBMA_MHV_ENTRY.md with MHV entry reference
+- BBMA_EXTREME_ENTRY.md with extreme entry reference
+
+## [2024-07-13] - Initial project setup
+
+### Added
+- Basic project structure
+- README.md with setup instructions
+- Initial documentation of BBMA strategy components
+- Git repository configuration
 
 ## [2024-04-09] - Initial Setup
 

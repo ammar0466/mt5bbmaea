@@ -68,6 +68,29 @@
       "2": "Add the change to CHANGELOG.md with date and description",
       "3": "Commit both files with appropriate commit message",
       "4": "When discovering new tasks, add them to TASKS.md"
+    },
+    "pre_commit_hooks": {
+      "check_tasks": {
+        "description": "Check if TASKS.md has been updated",
+        "command": "git diff --cached --name-only | grep -q TASKS.md || (echo 'Error: TASKS.md must be updated before commit' && exit 1)"
+      },
+      "check_changelog": {
+        "description": "Check if CHANGELOG.md has been updated",
+        "command": "git diff --cached --name-only | grep -q CHANGELOG.md || (echo 'Error: CHANGELOG.md must be updated before commit' && exit 1)"
+      }
+    },
+    "commit_template": {
+      "description": "Template for commit messages",
+      "format": "type: description\n\n- Updated TASKS.md: [task description]\n- Updated CHANGELOG.md: [change description]",
+      "types": {
+        "feat": "new feature",
+        "fix": "bug fix",
+        "docs": "documentation changes",
+        "style": "formatting, missing semi colons, etc",
+        "refactor": "code change that neither fixes a bug nor adds a feature",
+        "test": "adding missing tests",
+        "chore": "maintain"
+      }
     }
   },
   "git.docs": {
@@ -528,6 +551,106 @@
           "Below/above MALO extreme point",
           "Based on BB width"
         ]
+      }
+    },
+    "entry_step": {
+      "description": "Step-by-step entry validation process",
+      "prerequisites": [
+        "Must have valid structure first",
+        "Check multi-timeframe confirmation",
+        "Validate candlestick patterns"
+      ],
+      "process": {
+        "1_validate_structure": {
+          "description": "Validate the trading structure",
+          "checks": [
+            "Confirm structure type (Extreme/MHV/TPW/etc)",
+            "Verify structure formation",
+            "Check structure quality"
+          ]
+        },
+        "2_check_timeframes": {
+          "description": "Multi-timeframe validation",
+          "sequence": [
+            "First timeframe: Initial structure",
+            "Second timeframe: Confirmation",
+            "Third timeframe: Final validation"
+          ],
+          "entry_codes": {
+            "RRE": {
+              "first": "Reentry",
+              "second": "Reentry",
+              "third": "Extreme"
+            },
+            "REE": {
+              "first": "Reentry",
+              "second": "Extreme",
+              "third": "Extreme"
+            },
+            "REM": {
+              "first": "Reentry",
+              "second": "Extreme",
+              "third": "MHV"
+            }
+          }
+        },
+        "3_validate_patterns": {
+          "description": "Candlestick pattern validation",
+          "patterns": {
+            "pinbar": {
+              "conditions": [
+                "Long shadow",
+                "Small body",
+                "Strong reversal signal"
+              ]
+            },
+            "engulfing": {
+              "conditions": [
+                "Second candle larger than first",
+                "Opposite colors",
+                "Complete body engulfment"
+              ]
+            }
+          }
+        },
+        "4_check_momentum": {
+          "description": "Momentum validation",
+          "checks": [
+            "EMA 50 trend direction",
+            "BB band slope",
+            "Volume confirmation"
+          ]
+        },
+        "5_entry_decision": {
+          "description": "Final entry decision",
+          "conditions": [
+            "All validations passed",
+            "Risk management checked",
+            "Position size calculated"
+          ],
+          "risk_management": {
+            "stop_loss": {
+              "normal": [
+                "Below/above recent swing low/high",
+                "Fixed pip value based on volatility"
+              ],
+              "extreme": [
+                "Below/above MALO extreme point",
+                "Based on BB width"
+              ]
+            },
+            "take_profit": {
+              "normal": [
+                "Opposite Bollinger Band",
+                "Major support/resistance level"
+              ],
+              "tpw": [
+                "MAHILOW level",
+                "After extreme formation"
+              ]
+            }
+          }
+        }
       }
     }
   },
