@@ -191,5 +191,357 @@
         ]
       }
     }
+  },
+  "project": {
+    "name": "BBMA Expert Advisor",
+    "description": "Bollinger Bands and Moving Averages Expert Advisor for MetaTrader 5",
+    "strategy": {
+      "name": "BBMA by Oma Ally",
+      "base": "Bollinger Bands + Moving Averages",
+      "timeframes": ["M15", "H1", "H4"],
+      "indicators": {
+        "bollinger": {
+          "period": 20,
+          "deviation": 2.0,
+          "apply_to": "close",
+          "style": "custom"
+        },
+        "moving_averages": {
+          "trend": {
+            "name": "EMA 50",
+            "period": 50,
+            "method": "exponential",
+            "apply_to": "close",
+            "style": "custom"
+          },
+          "high": {
+            "name": "MA 5/10 High",
+            "periods": [5, 10],
+            "method": "linear_weighted",
+            "apply_to": "high",
+            "style": "custom"
+          },
+          "low": {
+            "name": "MA 5/10 Low",
+            "periods": [5, 10],
+            "method": "linear_weighted",
+            "apply_to": "low",
+            "style": "custom"
+          }
+        }
+      },
+      "entry_codes": {
+        "RRE": {
+          "description": "Reentry | Reentry | Extreme",
+          "timeframes": ["first", "second", "third"]
+        },
+        "REE": {
+          "description": "Reentry | Extreme | Extreme",
+          "timeframes": ["first", "second", "third"]
+        },
+        "REM": {
+          "description": "Reentry | Extreme | MHV",
+          "timeframes": ["first", "second", "third"]
+        }
+      }
+    }
+  },
+  "code_rules": {
+    "mql5": {
+      "style": {
+        "indentation": "4 spaces",
+        "braces": "same line",
+        "max_line_length": 80
+      },
+      "naming": {
+        "classes": "PascalCase",
+        "functions": "camelCase",
+        "variables": "camelCase",
+        "constants": "UPPER_CASE"
+      }
+    }
+  },
+  "trading_rules": {
+    "structures": {
+      "extreme": {
+        "types": {
+          "A": {
+            "description": "MAHILOW and candlestick exit BB simultaneously",
+            "conditions": [
+              "MA 5/10 high/low exits BB",
+              "Candlestick exits BB at same time",
+              "Strong reversal signal"
+            ]
+          },
+          "B": {
+            "description": "Only candlestick body/shadow exits BB",
+            "conditions": [
+              "Candlestick body or shadow exits BB",
+              "MAHILOW stays inside BB",
+              "Weaker reversal signal"
+            ]
+          },
+          "C": {
+            "description": "EMA 50 near BB band and touched by candlestick",
+            "conditions": [
+              "EMA 50 close to upper/lower BB",
+              "Candlestick touches EMA 50",
+              "Potential trend change"
+            ]
+          },
+          "magic": {
+            "description": "Both MA 5 and MA 10 exit BB",
+            "conditions": [
+              "MA 5 exits BB",
+              "MA 10 exits BB",
+              "Rare but strong signal"
+            ]
+          }
+        },
+        "validation": {
+          "flat_bb": {
+            "description": "BB in horizontal/consolidation phase",
+            "conditions": [
+              "BB bands are parallel",
+              "Low volatility period",
+              "Market in consolidation"
+            ]
+          },
+          "candlestick_patterns": {
+            "patterns": [
+              {
+                "name": "Pinbar",
+                "conditions": [
+                  "Long shadow",
+                  "Small body",
+                  "Strong reversal signal"
+                ]
+              },
+              {
+                "name": "Engulfing",
+                "conditions": [
+                  "Second candle larger than first",
+                  "Opposite colors",
+                  "Complete body engulfment"
+                ]
+              }
+            ]
+          },
+          "multi_timeframe": {
+            "description": "Validate extreme across timeframes",
+            "conditions": [
+              "Check lower timeframe confirmation",
+              "Look for candlestick patterns",
+              "Confirm trend direction"
+            ]
+          }
+        }
+      },
+      "mhv": {
+        "description": "Market Hilang Volume - Market exhaustion signal",
+        "prerequisites": [
+          "Must have extreme first",
+          "Price fails to break BB bands",
+          "Indicates new trend starting"
+        ],
+        "types": {
+          "lower_inclined": {
+            "description": "MHV lower than extreme with inclined BB",
+            "conditions": [
+              "MHV forms below extreme",
+              "BB lines are inclined",
+              "Strong trend change signal"
+            ],
+            "winrate": "high"
+          },
+          "parallel": {
+            "description": "MHV parallel to extreme",
+            "conditions": [
+              "MHV at same level as extreme",
+              "Doesn't break BB lines",
+              "Forms double top/bottom",
+              "Often pulls back first"
+            ],
+            "winrate": "medium",
+            "entry": "Wait for pullback"
+          },
+          "lower_flat": {
+            "description": "MHV lower than extreme with flat BB",
+            "conditions": [
+              "MHV forms below extreme",
+              "BB lines are flat/horizontal",
+              "More conservative setup"
+            ],
+            "winrate": "medium",
+            "entry": "Wait for clear momentum"
+          },
+          "double_parallel": {
+            "description": "Double MHV parallel with CSA before MHV",
+            "conditions": [
+              "MHV parallel to extreme",
+              "CSA forms before MHV",
+              "Strong trend signal"
+            ],
+            "winrate": "high"
+          },
+          "higher": {
+            "description": "MHV higher than extreme",
+            "conditions": [
+              "MHV forms above extreme",
+              "Must wait for CSAK",
+              "Needs reentry after CSAK"
+            ],
+            "winrate": "high",
+            "entry": "Wait for CSAK formation"
+          }
+        },
+        "validation": {
+          "multi_timeframe": {
+            "process": [
+              "Check for extreme first",
+              "Verify price fails to break BB",
+              "Confirm in lower timeframe",
+              "Look for candlestick patterns"
+            ],
+            "example": {
+              "daily": "No MHV if no extreme (momentum)",
+              "h4": "Possible MHV if extreme present",
+              "h1": "Confirms with extreme"
+            }
+          },
+          "stop_loss": {
+            "based_on": "EMA 100 break",
+            "timeframe": "Second timeframe level"
+          }
+        }
+      },
+      "tpw": {
+        "description": "Take Profit Wajib - Required target after extreme",
+        "conditions": [
+          "Must follow extreme formation",
+          "Used for scalping setups",
+          "Target at MAHILOW level"
+        ],
+        "validation": [
+          "Confirm extreme is valid",
+          "Check BB structure",
+          "Verify trend direction"
+        ]
+      },
+      "csak": {
+        "reversal": {
+          "conditions": [
+            "EMA 50 exits Bollinger Band",
+            "Candlestick breaks middle BB",
+            "Multi-timeframe validation",
+            "Full BBMA structure present"
+          ],
+          "validation": [
+            "Mark MHV and CSAK candlestick",
+            "Check lower timeframe",
+            "Confirm extreme setup",
+            "Confirm momentum"
+          ]
+        },
+        "continuation": {
+          "conditions": [
+            "Candlestick breaks middle BB and EMA 50",
+            "Multi-timeframe validation",
+            "Full BBMA structure present"
+          ],
+          "validation": [
+            "Check for MHV",
+            "Validate in lower timeframe",
+            "Confirm extreme",
+            "Confirm momentum"
+          ]
+        }
+      },
+      "csm": {
+        "conditions": [
+          "Candlestick exits BB",
+          "MAHILOW stays inside BB",
+          "Indicates trend continuation"
+        ]
+      },
+      "reentry": {
+        "types": [
+          "After CSAK",
+          "After CSM",
+          "After MHV",
+          "After extreme"
+        ],
+        "conditions": [
+          "Pullback to MAHILOW",
+          "Must have previous structure",
+          "Validate in lower timeframe"
+        ]
+      }
+    },
+    "entry": {
+      "normal_bbma": {
+        "long": [
+          "Price touches lower Bollinger Band",
+          "EMA 8 crosses above EMA 21",
+          "Higher timeframe trend is bullish"
+        ],
+        "short": [
+          "Price touches upper Bollinger Band",
+          "EMA 8 crosses below EMA 21",
+          "Higher timeframe trend is bearish"
+        ]
+      },
+      "extreme_bbma": {
+        "long": [
+          "MALO (MA 5/10 low) breaks below lower BB",
+          "MALO returns inside BB (reversal)",
+          "EMA 8 crosses above EMA 21",
+          "Higher timeframe trend is bullish",
+          "Valid CSAK formation"
+        ],
+        "short": [
+          "MALO (MA 5/10 high) breaks above upper BB",
+          "MALO returns inside BB (reversal)",
+          "EMA 8 crosses below EMA 21",
+          "Higher timeframe trend is bearish",
+          "Valid CSAK formation"
+        ]
+      }
+    },
+    "exit": {
+      "take_profit": {
+        "normal": [
+          "Opposite Bollinger Band",
+          "Major support/resistance level"
+        ],
+        "tpw": [
+          "MAHILOW level",
+          "After extreme formation"
+        ]
+      },
+      "stop_loss": {
+        "normal": [
+          "Below/above recent swing low/high",
+          "Fixed pip value based on volatility"
+        ],
+        "extreme": [
+          "Below/above MALO extreme point",
+          "Based on BB width"
+        ]
+      }
+    }
+  },
+  "file_structure": {
+    "Experts/BBMA_EA/": {
+      "main.mq5": "Main EA file with trading logic",
+      "signal_generator.mqh": "Entry/exit signal generation",
+      "risk_manager.mqh": "Position sizing and risk management",
+      "market_analyzer.mqh": "Market condition analysis"
+    },
+    "Include/BBMA_Lib/": {
+      "types.mqh": "Custom data structures",
+      "constants.mqh": "Trading parameters",
+      "utils.mqh": "Helper functions"
+    }
   }
 } 
