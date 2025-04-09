@@ -14,6 +14,7 @@
     "unusedVariables": "warning",
     "possibleTypo": "warning"
   },
+  "git.remote": "git@github.com:ammar0466/mt5bbmaea.git",
   "snippets": {
     "mql5": {
       "function": {
