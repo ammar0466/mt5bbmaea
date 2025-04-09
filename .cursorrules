@@ -15,6 +15,41 @@
     "possibleTypo": "warning"
   },
   "git.remote": "git@github.com:ammar0466/mt5bbmaea.git",
+  "project.structure": {
+    "description": "Bollinger Bands and Moving Averages Expert Advisor for MetaTrader 5",
+    "root": "bbmea",
+    "directories": {
+      "Experts": {
+        "description": "Contains the main EA file",
+        "files": {
+          "BBMA_EA/main.mq5": "Main EA file with trading logic"
+        }
+      },
+      "Include": {
+        "description": "Contains library files and custom functions",
+        "files": {
+          "BBMA_Lib/types.mqh": "Custom data structures and types",
+          "BBMA_Lib/constants.mqh": "Trading parameters and constants",
+          "BBMA_Lib/utils.mqh": "Utility functions for calculations"
+        }
+      }
+    },
+    "files": {
+      "README.md": "Project documentation and setup instructions",
+      "DASHBOARD.md": "Markdown representation of EA dashboard",
+      "TASKS.md": "Project tasks and roadmap",
+      "LICENSE": "Project license information",
+      "mt5ea.mq5": "Legacy EA file (to be replaced)"
+    },
+    "dependencies": {
+      "mql5": "MetaTrader 5 platform",
+      "libraries": [
+        "Trade.mqh",
+        "PositionInfo.mqh",
+        "AccountInfo.mqh"
+      ]
+    }
+  },
   "git.docs": {
     "setup": {
       "init": "git init",
