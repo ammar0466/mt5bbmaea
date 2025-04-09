@@ -1,0 +1,106 @@
+{
+  "formatOnSave": true,
+  "editor.rulers": [80],
+  "files.associations": {
+    "*.mq5": "mql5",
+    "*.mqh": "mql5"
+  },
+  "search.exclude": {
+    "**/tester/": true,
+    "**/logs/": true
+  },
+  "mql5.linting": {
+    "all": true,
+    "unusedVariables": "warning",
+    "possibleTypo": "warning"
+  },
+  "snippets": {
+    "mql5": {
+      "function": {
+        "prefix": "func",
+        "body": [
+          "//+------------------------------------------------------------------+",
+          "//| ${1:Function description}                                         |",
+          "//+------------------------------------------------------------------+",
+          "${2:void} ${3:functionName}(${4:parameters})",
+          "{",
+          "    ${0}",
+          "}"
+        ]
+      },
+      "class": {
+        "prefix": "class",
+        "body": [
+          "//+------------------------------------------------------------------+",
+          "//| ${1:Class description}                                           |",
+          "//+------------------------------------------------------------------+",
+          "class ${2:ClassName}",
+          "{",
+          "private:",
+          "    ${3:// Private members}",
+          "",
+          "public:",
+          "    ${2:ClassName}() { ${4:// Constructor} }",
+          "    ~${2:ClassName}() { ${5:// Destructor} }",
+          "",
+          "    ${0:// Public methods}",
+          "};"
+        ]
+      },
+      "header": {
+        "prefix": "header",
+        "body": [
+          "//+------------------------------------------------------------------+",
+          "//|                                                    ${1:filename} |",
+          "//|                                  Copyright 2024, Your Name.      |",
+          "//|                                       https://www.yoursite.com   |",
+          "//+------------------------------------------------------------------+"
+        ]
+      },
+      "indicator": {
+        "prefix": "indicator",
+        "body": [
+          "#property indicator_chart_window",
+          "#property indicator_buffers ${1:1}",
+          "#property indicator_plots   ${1:1}",
+          "",
+          "#property indicator_label1  \"${2:Label}\"",
+          "#property indicator_type1   DRAW_LINE",
+          "#property indicator_color1  clrBlue",
+          "#property indicator_style1  STYLE_SOLID",
+          "#property indicator_width1  1",
+          "",
+          "double         Buffer[];",
+          "",
+          "//+------------------------------------------------------------------+",
+          "//| Custom indicator initialization function                         |",
+          "//+------------------------------------------------------------------+",
+          "int OnInit()",
+          "{",
+          "    SetIndexBuffer(0, Buffer, INDICATOR_DATA);",
+          "    return(INIT_SUCCEEDED);",
+          "}",
+          "",
+          "//+------------------------------------------------------------------+",
+          "//| Custom indicator iteration function                              |",
+          "//+------------------------------------------------------------------+",
+          "int OnCalculate(const int rates_total,",
+          "                const int prev_calculated,",
+          "                const datetime &time[],",
+          "                const double &open[],",
+          "                const double &high[],",
+          "                const double &low[],",
+          "                const double &close[],",
+          "                const long &tick_volume[],",
+          "                const long &volume[],",
+          "                const int &spread[])",
+          "{",
+          "    ${0:// Calculation code}",
+          "    ",
+          "    return(rates_total);",
+          "}"
+        ]
+      }
+    }
+  }
+} 
